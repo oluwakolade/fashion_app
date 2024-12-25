@@ -6,10 +6,15 @@ import 'package:fashion_app/features/authentication/presentation/widgets/textfie
 import 'package:fashion_app/features/home/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
   final void Function()? togglePages;
-  const SignInScreen({super.key, required this.togglePages});
+
+  const SignInScreen({
+    super.key,
+    required this.togglePages,
+  });
 
   @override
   ConsumerState<SignInScreen> createState() => _SignInScreenState();
@@ -18,6 +23,24 @@ class SignInScreen extends ConsumerStatefulWidget {
 class _SignInScreenState extends ConsumerState<SignInScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  String selectedLabel = '';
+
+  Future<String?> getSelectedLabel() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('selectedLabel');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getSelectedLabel().then((label) {
+      if (label != null) {
+        setState(() {
+          selectedLabel = label;
+        });
+      }
+    });
+  }
 
 //ref.read(authProvider.notifier)
   void signIn() {
@@ -28,8 +51,11 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
     if (email.isNotEmpty && password.isNotEmpty) {
       authNotifier.login(email, password);
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const HomeScreen()));
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(),
+        ),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

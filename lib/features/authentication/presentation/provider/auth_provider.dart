@@ -10,3 +10,5 @@ final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   final authRepo = ref.watch(authRepoProvider);
   return AuthNotifier(authRepo: authRepo);
 });
+
+final selectedLabelProvider = StateProvider<String?>((ref) => null);

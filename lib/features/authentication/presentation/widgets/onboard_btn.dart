@@ -1,42 +1,33 @@
 import 'package:fashion_app/core/constants/app_text.dart';
 import 'package:flutter/material.dart';
 
-class OnboardButton extends StatefulWidget {
+class OnboardButton extends StatelessWidget {
   final String label;
-  const OnboardButton({super.key, required this.label});
+  final bool isSelected;
+  final Function(String) onSelected;
+  const OnboardButton(
+      {super.key,
+      required this.label,
+      required this.isSelected,
+      required this.onSelected});
 
-  @override
-  State<OnboardButton> createState() => _OnboardButtonState();
-}
-
-class _OnboardButtonState extends State<OnboardButton> {
-  bool isPress = false;
-
-  void update() {
-    setState(() {
-      isPress = !isPress;
-    });
-  }
-
+  // bool isPress = false;
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: update,
-      child: Flexible(
-        flex: 1,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            color: isPress
-                ? Theme.of(context).colorScheme.secondary
-                : Theme.of(context).colorScheme.tertiary,
-          ),
-          child: Center(
-            child: AppText(
-                text: widget.label,
-                color: isPress ? Colors.black : Colors.white),
-          ),
+      onTap: () => onSelected(label),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          color: isSelected
+              ? Theme.of(context).colorScheme.secondary
+              : Theme.of(context).colorScheme.tertiary,
+        ),
+        child: Center(
+          child: AppText(
+              text: label, color: isSelected ? Colors.black : Colors.white),
         ),
       ),
     );

@@ -19,7 +19,11 @@ class AppText extends StatelessWidget {
     return Text(
       text,
       style: GoogleFonts.montserrat(
-          color: color, fontSize: fontSize, fontWeight: fontWeight),
+          color: Theme.of(context).colorScheme.primary,
+          fontSize: fontSize,
+          fontWeight: fontWeight),
+      softWrap: true,
+      overflow: TextOverflow.visible,
     );
   }
 }

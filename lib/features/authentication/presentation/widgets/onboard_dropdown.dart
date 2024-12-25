@@ -15,6 +15,7 @@ class _OnboardDropdownState extends State<OnboardDropdown> {
   @override
   Widget build(BuildContext context) {
     return DropdownButton(
+        menuWidth: double.infinity,
         borderRadius: BorderRadius.circular(50),
         dropdownColor: Theme.of(context).colorScheme.secondary,
         value: dropDownValue,

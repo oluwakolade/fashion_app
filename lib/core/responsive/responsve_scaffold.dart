@@ -26,7 +26,7 @@ class ResponsiveScaffold extends StatelessWidget {
             maxWidth: 430.00,
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
             child: body,
           ),
         ),

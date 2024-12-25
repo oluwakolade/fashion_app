@@ -7,7 +7,8 @@ class AppLoadingIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: SizedBox(
-        height: 100,
+        height: 30,
+        width: 30,
         child: CircularProgressIndicator(
           color: Theme.of(context).colorScheme.tertiary,
           backgroundColor: Colors.transparent,
