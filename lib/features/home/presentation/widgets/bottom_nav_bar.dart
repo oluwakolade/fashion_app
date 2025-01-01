@@ -33,12 +33,8 @@ class AppBottomBar extends StatelessWidget {
           PersistentBottomNavBarItem(
             activeColorPrimary: activeColor,
             inactiveColorPrimary: color,
-            icon: const Icon(Icons.notifications_outlined),
+            icon: const Icon(Icons.shopping_bag_outlined),
           ),
-          PersistentBottomNavBarItem(
-              activeColorPrimary: activeColor,
-              inactiveColorPrimary: color,
-              icon: const Icon(Icons.list_alt_outlined)),
           PersistentBottomNavBarItem(
               activeColorPrimary: activeColor,
               inactiveColorPrimary: color,

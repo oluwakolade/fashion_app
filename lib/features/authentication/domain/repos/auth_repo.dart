@@ -5,7 +5,7 @@ import 'package:fashion_app/features/authentication/domain/entities/app_user.dar
 abstract class AuthRepo {
   Future<AppUser?> loginWithEmailPassword(String email, String password);
   Future<AppUser?> registerWithEmailPassword(
-      String name, String email, String password);
+      String lastName, String name, String email, String password);
   Future<void> logout();
   Future<AppUser?> getCurrentUser();
 }

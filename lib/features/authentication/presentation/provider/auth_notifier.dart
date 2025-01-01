@@ -5,27 +5,31 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AuthNotifier extends StateNotifier<AuthState> {
   final AuthRepo authRepo;
-  AuthNotifier({required this.authRepo}) : super(AuthIntial());
   AppUser? _currentUser;
+
+  AuthNotifier({required this.authRepo}) : super(AuthIntial());
+
+  // bool isValidEmail(String email) {
+  //   final emailRegex =
+  //       RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
+  //   return emailRegex.hasMatch(email);
+  // }
 
   //get current user
 
-  AppUser? get currentUser => _currentUser;
-
   //check if user is authenticated
-  Future<void> chechAuth() async {
-    try {
-      final user = await authRepo.getCurrentUser();
-      if (user != null) {
-        _currentUser = user;
-        state = Authenticated(user);
-      } else {
-        state = UnAuthenticated();
-      }
-    } catch (e) {
-      state = AuthErrors(e.toString());
+
+  void checkAuth() async {
+    final AppUser? user = await authRepo.getCurrentUser();
+    if (user != null) {
+      _currentUser = user;
+      state = Authenticated(user);
+    } else {
+      state = UnAuthenticated();
     }
   }
+
+  AppUser? get currentUser => _currentUser;
 
   // Login with email and password
   Future<void> login(String email, String password) async {
@@ -34,40 +38,50 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final user = await authRepo.loginWithEmailPassword(email, password);
       if (user != null) {
         _currentUser = user;
+        print(_currentUser);
+
         state = Authenticated(user);
       } else {
         state = UnAuthenticated();
       }
     } catch (e) {
       state = AuthErrors(e.toString());
+      print(e.toString());
+      // state = UnAuthenticated();
     }
   }
 
   // Register a new user
-  Future<void> register(String name, String email, String password) async {
+  Future<void> register(
+      String name, String email, String password, String lastName) async {
+    // if (!isValidEmail(email)) {
+    //   state = AuthErrors('Invalid email format');
+    //   print(email);
+    //   return;
+    // }
     try {
       state = AuthLoading();
-      final user =
-          await authRepo.registerWithEmailPassword(name, email, password);
+      final user = await authRepo.registerWithEmailPassword(
+          name, email, password, lastName);
       if (user != null) {
         _currentUser = user;
+        print(email);
+        print(user);
         state = Authenticated(user);
       } else {
         state = UnAuthenticated();
       }
     } catch (e) {
       state = AuthErrors(e.toString());
+      print(e.toString());
+
+      // state = UnAuthenticated();
     }
   }
 
   // Logout the user
   Future<void> logout() async {
-    try {
-      await authRepo.logout();
-      _currentUser = null;
-      state = UnAuthenticated();
-    } catch (e) {
-      state = AuthErrors(e.toString());
-    }
+    await authRepo.logout();
+    state = UnAuthenticated();
   }
 }

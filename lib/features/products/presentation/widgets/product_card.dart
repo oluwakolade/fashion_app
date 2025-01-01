@@ -2,20 +2,19 @@ import 'package:fashion_app/core/constants/app_text.dart';
 import 'package:fashion_app/features/products/domain/entities/products.dart';
 import 'package:fashion_app/features/products/presentation/provider/product_provider.dart';
 import 'package:fashion_app/features/products/presentation/widgets/product_details.dart';
+import 'package:fashion_app/features/settings/domain/entities/user.dart';
+import 'package:fashion_app/features/settings/presentation/provider/favorite_provider.dart';
+import 'package:fashion_app/features/settings/presentation/provider/favorite_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProductCard extends ConsumerWidget {
   final Products products;
-  const ProductCard({
-    super.key,
-    required this.products,
-  });
+  final User? user;
+  const ProductCard({super.key, required this.products, this.user});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final productState = ref.watch(productProvider);
-
     return InkWell(
       onTap: () {
         Navigator.of(context).push(
@@ -60,18 +59,27 @@ class ProductCard extends ConsumerWidget {
                 Positioned(
                   top: 0,
                   right: 0,
-                  child: InkWell(
-                    onTap: () {
-                      ref
-                          .read(productProvider.notifier)
-                          .toggleLikes(products.id);
-                    },
-                    child: Icon(
-                        products.isFavorite
-                            ? Icons.favorite
-                            : Icons.favorite_outline,
-                        color: products.isFavorite ? Colors.red : Colors.black),
-                  ),
+                  child: Consumer(builder: (context, ref, child) {
+                    final favoritesState = ref.watch(favoritesNotifierProvider);
+                    final notifier =
+                        ref.read(favoritesNotifierProvider.notifier);
+
+                    bool isFavorite = favoritesState is FavoritesLoaded &&
+                        favoritesState.favorites
+                            .any((product) => product.id == products.id);
+
+                    return InkWell(
+                      onTap: () async {
+                        if (favoritesState is! FavoritesLoading) {
+                          await notifier.toggleFavorites(
+                              user!.uid, products.id);
+                        }
+                      },
+                      child: Icon(
+                          isFavorite ? Icons.favorite : Icons.favorite_outline,
+                          color: isFavorite ? Colors.red : Colors.black),
+                    );
+                  }),
                 )
               ],
             ),

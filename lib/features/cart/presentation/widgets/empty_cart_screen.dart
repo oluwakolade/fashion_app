@@ -19,7 +19,7 @@ class EmptyCartScreen extends StatelessWidget {
             color: Theme.of(context).colorScheme.primary,
             fontSize: 20,
           ),
-          AppButton(onPressed: onPressed, text: "Excplore Categories")
+          AppButton(onPressed: onPressed, text: "Explore Categories")
         ],
       ),
     );

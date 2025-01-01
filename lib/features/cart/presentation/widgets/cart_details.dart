@@ -11,10 +11,11 @@ class CartDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: MediaQuery.of(context).size.height * 0.2,
       padding: EdgeInsets.zero,
       child: Column(
-        spacing: 5,
         crossAxisAlignment: CrossAxisAlignment.start,
+        // spacing: 4,
         children: [
           //subtotal
           Row(
@@ -22,10 +23,12 @@ class CartDetails extends StatelessWidget {
             children: [
               AppText(
                 text: 'Subtotal',
+                fontSize: 12,
                 color: Theme.of(context).colorScheme.secondary,
               ),
               AppText(
                 text: '\$${subtotal.toStringAsFixed(2)}',
+                fontSize: 12,
                 color: Theme.of(context).colorScheme.primary,
               ),
             ],
@@ -37,10 +40,12 @@ class CartDetails extends StatelessWidget {
               AppText(
                 text: 'Shpping Cost',
                 color: Theme.of(context).colorScheme.secondary,
+                fontSize: 12,
               ),
               AppText(
                 text: '\$8.00',
                 color: Theme.of(context).colorScheme.primary,
+                fontSize: 12,
               ),
             ],
           ),
@@ -51,10 +56,12 @@ class CartDetails extends StatelessWidget {
               AppText(
                 text: 'Tax ',
                 color: Theme.of(context).colorScheme.secondary,
+                fontSize: 12,
               ),
               AppText(
                 text: '\$0.00',
                 color: Theme.of(context).colorScheme.primary,
+                fontSize: 12,
               ),
             ],
           ),
@@ -66,10 +73,12 @@ class CartDetails extends StatelessWidget {
               AppText(
                 text: 'Total',
                 color: Theme.of(context).colorScheme.secondary,
+                fontSize: 12,
               ),
               AppText(
                 text: '\$${total.toStringAsFixed(2)}',
                 color: Theme.of(context).colorScheme.primary,
+                fontSize: 12,
               ),
             ],
           ),
@@ -86,32 +95,52 @@ class CartInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(15),
-      child: TextField(
-        decoration: InputDecoration(
-          prefix: Container(
-            height: 10,
-            width: 10,
-            decoration: const BoxDecoration(
-                shape: BoxShape.circle, color: Colors.green),
+    return TextField(
+      decoration: InputDecoration(
+        prefixIcon: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            height: 25,
+            width: 25,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.transparent,
+              border: Border.all(color: Colors.green),
+            ),
             child: const Icon(
               Icons.close_outlined,
               color: Colors.green,
+              size: 15,
             ),
           ),
-          suffix:
-              ProductButtonCircle(onPressed: () {}, icon: Icons.chevron_right),
-          fillColor: Theme.of(context).colorScheme.secondary,
-          filled: true,
-          hintText: 'Enter Coupon Code',
-          enabledBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              borderSide: BorderSide.none),
-          focusedBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              borderSide: BorderSide.none),
         ),
+        suffixIcon: Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Theme.of(context).colorScheme.tertiary),
+            child: const Center(
+              child: Icon(
+                Icons.chevron_right,
+                color: Colors.white,
+                size: 25,
+              ),
+            ),
+          ),
+        ),
+        fillColor: Theme.of(context).colorScheme.secondary,
+        filled: true,
+        hintText: 'Enter Coupon Code',
+        contentPadding: const EdgeInsets.symmetric(vertical: 15.0),
+        enabledBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(50)),
+            borderSide: BorderSide.none),
+        focusedBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(50)),
+            borderSide: BorderSide.none),
       ),
     );
   }

@@ -14,6 +14,9 @@ class ProductsFirebaseRepo extends ProductRepo {
   final CollectionReference categoriesCollection =
       FirebaseFirestore.instance.collection('categories');
 
+  final CollectionReference usersCollection =
+      FirebaseFirestore.instance.collection('users');
+
   //featch products
 
   @override
@@ -25,6 +28,25 @@ class ProductsFirebaseRepo extends ProductRepo {
           snapshot.docs.map((doc) => Products.fromFirestore(doc)).toList();
 
       return allProducts;
+    } catch (e) {
+      throw 'Something went wrong';
+    }
+  }
+
+  // Fetch product by ID
+
+  @override
+  Future<List<Products>> getProductsById(String id) async {
+    try {
+      final snapshot =
+          await productsCollection.where('id', isEqualTo: id).get();
+
+      // final snapshot = await productsCollection.doc(id).get();
+
+      final List<Products> allProductsbyId =
+          snapshot.docs.map((doc) => Products.fromFirestore(doc)).toList();
+
+      return allProductsbyId;
     } catch (e) {
       throw 'Something went wrong';
     }
@@ -52,24 +74,6 @@ class ProductsFirebaseRepo extends ProductRepo {
   }
 
 //toggle products fav
-  @override
-  Future<void> toggleFavorite(String id) async {
-    try {
-      final productDoc = productsCollection.doc(id);
-      final productSnapshot = await productDoc.get();
-      if (productSnapshot.exists) {
-        final data = productSnapshot.data() as Map<String, dynamic>;
-
-        final isFavorite = data["isFavorite"] ?? false;
-
-        await productDoc.update({'isFavorite': !isFavorite});
-      } else {
-        throw Exception('Product with id $id does not exist.');
-      }
-    } catch (e) {
-      throw Exception('Failed to toggle favorite status: $e');
-    }
-  }
 
   @override
   Future<void> addtoCart(String id) async {
@@ -112,4 +116,30 @@ class ProductsFirebaseRepo extends ProductRepo {
       throw Exception("Failed to remove product from cart: $e");
     }
   }
+
+  // @override
+  // Future<List<Products>> getUserFavorites(String uid) async {
+  //   try {
+  //     final userDoc = await usersCollection.doc(uid).get();
+
+  //     if (userDoc.exists) {
+  //       final userData = userDoc.data() as Map<String, dynamic>;
+  //       final favorites = List<String>.from(userData['favorites'] ?? []);
+
+  //       if (favorites.isEmpty) {
+  //         return [];
+  //       }
+
+  //       final snapshot = await productsCollection
+  //           .where(FieldPath.documentId, whereIn: favorites)
+  //           .get();
+
+  //       return snapshot.docs.map((doc) => Products.fromFirestore(doc)).toList();
+  //     } else {
+  //       throw Exception('User with ID $uid not found.');
+  //     }
+  //   } catch (e) {
+  //     throw Exception('Failed to fetch user favorites: $e');
+  //   }
+  // }
 }

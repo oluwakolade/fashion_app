@@ -14,32 +14,31 @@ class Products {
   final bool isFavorite;
   // final List<UserReviews> userReviews;
 
-  Products({
-    required this.id,
-    required this.name,
-    required this.price,
-    required this.image,
-    required this.description,
-    required this.ratings,
-    required this.review,
-    required this.categoryId,
-    required this.feature,
-    this.images,
-    this.isFavorite = false,
-  });
+  Products(
+      {required this.id,
+      required this.name,
+      required this.price,
+      required this.image,
+      required this.description,
+      required this.ratings,
+      required this.review,
+      required this.categoryId,
+      required this.feature,
+      this.images,
+      this.isFavorite = false});
 
   Products copyWith({String? image}) {
     return Products(
-      id: id,
-      name: name,
-      price: price,
-      image: image ?? this.image,
-      description: description,
-      ratings: ratings,
-      review: review,
-      categoryId: categoryId,
-      feature: feature,
-    );
+        id: id,
+        name: name,
+        price: price,
+        image: image ?? this.image,
+        description: description,
+        ratings: ratings,
+        review: review,
+        categoryId: categoryId,
+        feature: feature,
+        isFavorite: isFavorite);
   }
 
   static Products empty() => Products(

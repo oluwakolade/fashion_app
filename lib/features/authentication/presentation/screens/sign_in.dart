@@ -23,23 +23,28 @@ class SignInScreen extends ConsumerStatefulWidget {
 class _SignInScreenState extends ConsumerState<SignInScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  String selectedLabel = '';
+  // String selectedLabel = '';
 
-  Future<String?> getSelectedLabel() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('selectedLabel');
-  }
+  // Future<String?> getSelectedLabel() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   return prefs.getString('selectedLabel');
+  // }
 
-  @override
-  void initState() {
-    super.initState();
-    getSelectedLabel().then((label) {
-      if (label != null) {
-        setState(() {
-          selectedLabel = label;
-        });
-      }
-    });
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getSelectedLabel().then((label) {
+  //     if (label != null) {
+  //       setState(() {
+  //         selectedLabel = label;
+  //       });
+  //     }
+  //   });
+  // }
+
+  bool isValidEmail(String email) {
+    final emailRegex = RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+');
+    return emailRegex.hasMatch(email);
   }
 
 //ref.read(authProvider.notifier)
@@ -49,20 +54,32 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
     final authNotifier = ref.read(authProvider.notifier);
 
-    if (email.isNotEmpty && password.isNotEmpty) {
-      authNotifier.login(email, password);
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        ),
-      );
-    } else {
+    // if (email.isNotEmpty && password.isNotEmpty) {
+    //   authNotifier.login(email, password);
+
+    // } else {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(
+    //       content: Text("Please enter both enail and password"),
+    //     ),
+    //   );
+    // }
+
+    if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please enter both enail and password"),
-        ),
+        const SnackBar(content: Text("Please enter both email and password")),
       );
+      return;
     }
+
+    if (!isValidEmail(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter a valid email address")),
+      );
+      return;
+    }
+
+    authNotifier.login(email, password);
   }
 
   @override

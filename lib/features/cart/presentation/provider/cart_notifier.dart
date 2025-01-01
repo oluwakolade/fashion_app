@@ -10,7 +10,7 @@ class CartNotifier extends StateNotifier<CartState> {
   List<CartItem> get cart => List.unmodifiable(_cart);
 
   double _calculateTotal() {
-    return _cart.fold(0, (sum, item) => sum + item.total!);
+    return _cart.fold(0, (sum, item) => sum + item.total);
   }
 
 //ADD TO CART

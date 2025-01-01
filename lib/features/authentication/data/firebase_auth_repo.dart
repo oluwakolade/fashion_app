@@ -1,22 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fashion_app/features/authentication/domain/entities/app_user.dart';
 import 'package:fashion_app/features/authentication/domain/repos/auth_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthRepo implements AuthRepo {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore firebaseFireStore = FirebaseFirestore.instance;
+
   @override
   Future<AppUser?> loginWithEmailPassword(String email, String password) async {
     try {
       UserCredential userCredential = await firebaseAuth
-          .signInWithEmailAndPassword(email: email, password: password);
+          .signInWithEmailAndPassword(email: email.trim(), password: password);
 
-      // DocumentSnapshot userDoc = await firebaseFireStore
-      //     .collection("users")
-      //     .doc(userCredential.user!.uid)
-      //     .get();
+      DocumentSnapshot userDoc = await firebaseFireStore
+          .collection("users")
+          .doc(userCredential.user!.uid)
+          .get();
 
-      AppUser user =
-          AppUser(uid: userCredential.user!.uid, name: "", email: email);
+      AppUser user = AppUser(
+          uid: userCredential.user!.uid,
+          name: userDoc['name'] ?? 'Unknown',
+          email: email,
+          lastName: userDoc['lastName'] ?? 'Unknown');
 
       return user;
     } catch (e) {
@@ -26,18 +32,22 @@ class FirebaseAuthRepo implements AuthRepo {
 
   @override
   Future<AppUser?> registerWithEmailPassword(
-      String name, String email, String password) async {
+      String name, String lastName, String email, String password) async {
     try {
-      UserCredential userCredential = await firebaseAuth
-          .createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential =
+          await firebaseAuth.createUserWithEmailAndPassword(
+              email: email.trim(), password: password);
 
-      AppUser user =
-          AppUser(uid: userCredential.user!.uid, name: name, email: email);
+      AppUser user = AppUser(
+          uid: userCredential.user!.uid,
+          name: name,
+          email: email,
+          lastName: lastName);
 
-      // await firebaseFireStore
-      //     .collection("users")
-      //     .doc(user.uid)
-      //     .set(user.toJson());
+      await firebaseFireStore
+          .collection("users")
+          .doc(user.uid)
+          .set(user.toJson());
 
       return user;
     } catch (e) {
@@ -57,17 +67,17 @@ class FirebaseAuthRepo implements AuthRepo {
       return null;
     }
 
-    // DocumentSnapshot userDoc =
-    //     await firebaseFireStore.collection("users").doc(firebaseUser.uid).get();
+    DocumentSnapshot userDoc =
+        await firebaseFireStore.collection("users").doc(firebaseUser.uid).get();
 
-    // if (!userDoc.exists) {
-    //   return null;
-    // }
+    if (!userDoc.exists) {
+      return null;
+    }
 
     return AppUser(
         uid: firebaseUser.uid,
-        name: '',
-        // userDoc['name']
+        name: userDoc['name'] ?? 'Unknown',
+        lastName: userDoc['lastName'] ?? 'Unknown',
         email: firebaseUser.email!);
   }
 }

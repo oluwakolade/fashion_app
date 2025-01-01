@@ -72,4 +72,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'fashion-app-1d9db.firebasestorage.app',
     iosBundleId: 'com.example.fashionApp',
   );
+
 }

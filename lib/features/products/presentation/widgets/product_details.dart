@@ -9,12 +9,16 @@ import 'package:fashion_app/features/products/presentation/widgets/product_butto
 import 'package:fashion_app/features/products/presentation/widgets/product_dropdown.dart';
 import 'package:fashion_app/features/products/presentation/widgets/select_product_color.dart';
 import 'package:fashion_app/features/products/presentation/widgets/select_products_size.dart';
+import 'package:fashion_app/features/settings/domain/entities/user.dart';
+import 'package:fashion_app/features/settings/presentation/provider/favorite_provider.dart';
+import 'package:fashion_app/features/settings/presentation/provider/favorite_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProductDetails extends ConsumerStatefulWidget {
   final Products products;
-  const ProductDetails({super.key, required this.products});
+  final User? user;
+  const ProductDetails({super.key, required this.products, this.user});
 
   @override
   ConsumerState<ProductDetails> createState() => _ProductDetailsState();
@@ -22,8 +26,9 @@ class ProductDetails extends ConsumerStatefulWidget {
 
 class _ProductDetailsState extends ConsumerState<ProductDetails> {
   int quantity = 1;
-  String size = 'S';
-  Color color = Colors.black;
+  String selectedSize = 'S';
+  Color selectedColor = Colors.black;
+  // bool isPicked = false;
 
   void updateQuantity(bool increase) {
     setState(() {
@@ -36,21 +41,23 @@ class _ProductDetailsState extends ConsumerState<ProductDetails> {
 
   void changeSize(String newSize) {
     setState(() {
-      size = newSize;
+      selectedSize = newSize;
+      // isPicked = !isPicked;
     });
   }
 
   void changeColor(Color newColor) {
     setState(() {
-      color = newColor;
+      selectedColor = newColor;
+      // isPicked = !isPicked;
     });
   }
 
   void addToCart() {
     final cartItem = CartItem(
         product: widget.products,
-        size: size,
-        color: color,
+        size: selectedSize,
+        color: selectedColor,
         quantity: quantity,
         total: widget.products.price * quantity);
 
@@ -76,26 +83,38 @@ class _ProductDetailsState extends ConsumerState<ProductDetails> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const BackButton(),
-                    InkWell(
-                      onTap: () {
-                        ref
-                            .read(productProvider.notifier)
-                            .toggleLikes(widget.products.id);
-                      },
-                      child: Container(
+                    Consumer(builder: (context, ref, child) {
+                      final favoritesState =
+                          ref.watch(favoritesNotifierProvider);
+                      final notifier =
+                          ref.read(favoritesNotifierProvider.notifier);
+
+                      bool isFavorite = favoritesState is FavoritesLoaded &&
+                          favoritesState.favorites.any(
+                              (product) => product.id == widget.products.id);
+
+                      return InkWell(
+                        onTap: () async {
+                          if (favoritesState is! FavoritesLoading) {
+                            await notifier.toggleFavorites(
+                                widget.user!.uid, widget.products.id);
+                          }
+                        },
+                        child: Container(
                           padding: const EdgeInsets.all(15),
                           decoration: BoxDecoration(
                               color: theme.secondary, shape: BoxShape.circle),
                           child: Icon(
-                              widget.products.isFavorite
+                              isFavorite
                                   ? Icons.favorite
                                   : Icons.favorite_outline,
-                              color: widget.products.isFavorite
-                                  ? Colors.red
-                                  : Colors.black)),
-                    )
+                              color: isFavorite ? Colors.red : Colors.black),
+                        ),
+                      );
+                    }),
                   ],
                 ),
                 //images slide show
@@ -135,14 +154,15 @@ class _ProductDetailsState extends ConsumerState<ProductDetails> {
                 ProductDropdown(
                   onPressed: () {
                     openSizePicker(
-                        context: context,
-                        onSizeSelected: changeSize,
-                        selectedSize: size,
-                        isSelected: true);
+                      context: context,
+                      onSizeSelected: changeSize,
+                      selectedSize: selectedSize,
+                      // isSelected: isPicked
+                    );
                   },
                   text: "Size",
                   leadingWidget: AppText(
-                    text: size,
+                    text: selectedSize,
                     fontWeight: FontWeight.bold,
                   ),
                   icon: Icons.arrow_drop_down,
@@ -151,17 +171,18 @@ class _ProductDetailsState extends ConsumerState<ProductDetails> {
                 ProductDropdown(
                   onPressed: () {
                     openColorPicker(
-                        context: context,
-                        onColorSelected: changeColor,
-                        selectedColor: color,
-                        isSelected: true);
+                      context: context,
+                      onColorSelected: changeColor,
+                      selectedColor: selectedColor,
+                      // isSelected: isPicked
+                    );
                   },
                   text: "Color",
                   leadingWidget: Container(
                     width: 10,
                     height: 10,
-                    decoration:
-                        BoxDecoration(shape: BoxShape.circle, color: color),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: selectedColor),
                   ),
                   icon: Icons.arrow_drop_down,
                 ),
@@ -178,16 +199,22 @@ class _ProductDetailsState extends ConsumerState<ProductDetails> {
                 ),
 
                 //description
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.1,
-                  child: SingleChildScrollView(
-                    child: AppText(
-                      text: widget.products.description,
-                      color: theme.secondary,
-                      fontSize: 12,
-                    ),
-                  ),
+                AppText(
+                  text: widget.products.description,
+                  color: theme.secondary,
+                  fontSize: 12,
                 ),
+
+                //     SizedBox(
+                //   height: MediaQuery.of(context).size.height * 0.1,
+                //   child: SingleChildScrollView(
+                //     child: AppText(
+                //       text: widget.products.description,
+                //       color: theme.secondary,
+                //       fontSize: 12,
+                //     ),
+                //   ),
+                // ),
 
                 const AppText(
                   text: 'Shipping and Returns',
@@ -224,6 +251,7 @@ class _ProductDetailsState extends ConsumerState<ProductDetails> {
           Align(
             alignment: Alignment.bottomCenter,
             child: ProductButton(
+                label: 'Add to Cart',
                 onPressed: addToCart,
                 text: (productState is ProductLoaded &&
                         productState.total != null)

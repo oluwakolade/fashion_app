@@ -7,15 +7,16 @@ Color active = Colors.white;
 Color passive = Colors.black;
 Color activeContainer = const Color(0XFF8E6CEF);
 Color passiveContainer = const Color(0XFFF4F4F4);
-bool isSelected = false;
+// bool isSelected = false;
 
 void openSizePicker({
   required BuildContext context,
   required Function(String) onSizeSelected,
   required String selectedSize,
-  required bool isSelected,
+  // required bool isSelected,
 }) {
   showModalBottomSheet(
+    isScrollControlled: true,
     context: context,
     builder: (BuildContext context) {
       return SingleChildScrollView(
@@ -36,7 +37,10 @@ void openSizePicker({
                   text: 'Size', fontSize: 18, fontWeight: FontWeight.bold),
               Expanded(
                 child: ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
+                      final isSelected = size[index] == selectedSize;
                       return ListTile(
                         onTap: () {
                           onSizeSelected(size[index]);
@@ -62,7 +66,7 @@ void openSizePicker({
                     },
                     separatorBuilder: (BuildContext context, int index) =>
                         const SizedBox(
-                          width: 10,
+                          height: 10,
                         ),
                     itemCount: size.length),
               )

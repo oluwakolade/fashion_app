@@ -1,3 +1,4 @@
+import 'package:fashion_app/core/constants/progress_indicator.dart';
 import 'package:fashion_app/core/themes/app_themes.dart';
 import 'package:fashion_app/features/authentication/presentation/provider/auth_provider.dart';
 import 'package:fashion_app/features/authentication/presentation/provider/auth_state.dart';
@@ -19,16 +20,20 @@ class MyApp extends StatelessWidget {
       home: Consumer(builder: (context, ref, child) {
         final authState = ref.watch(authProvider);
 
+        print(authState);
+
+        if (authState is UnAuthenticated) {
+          return const AuthScreen();
+        }
+
         if (authState is Authenticated) {
           return const HomeScreen();
-        } else if (authState is UnAuthenticated) {
-          return const HomeScreen();
-          // AuthScreen();
-        } else if (authState is AuthErrors) {
+        }
+
+        if (authState is AuthErrors) {
           return const Center(child: Text('Error'));
         } else {
-          return const HomeScreen();
-          // AuthScreen(); // Show the login screen as a fallback
+          return const Scaffold(body: Center(child: AppLoadingIndicator()));
         }
       }),
     );

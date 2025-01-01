@@ -17,17 +17,17 @@ class OnboardButton extends StatelessWidget {
     return InkWell(
       onTap: () => onSelected(label),
       child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        width: 150,
+        padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),
           color: isSelected
-              ? Theme.of(context).colorScheme.secondary
-              : Theme.of(context).colorScheme.tertiary,
+              ? Theme.of(context).colorScheme.tertiary
+              : Theme.of(context).colorScheme.secondary,
         ),
         child: Center(
           child: AppText(
-              text: label, color: isSelected ? Colors.black : Colors.white),
+              text: label, color: isSelected ? Colors.white : Colors.black),
         ),
       ),
     );

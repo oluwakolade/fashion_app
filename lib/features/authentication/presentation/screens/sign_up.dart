@@ -2,7 +2,6 @@ import 'package:fashion_app/core/constants/app_text.dart';
 import 'package:fashion_app/core/constants/button.dart';
 import 'package:fashion_app/core/responsive/responsve_scaffold.dart';
 import 'package:fashion_app/features/authentication/presentation/provider/auth_provider.dart';
-import 'package:fashion_app/features/authentication/presentation/screens/onboarding.dart';
 import 'package:fashion_app/features/authentication/presentation/widgets/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,32 +17,65 @@ class SignUpScreen extends ConsumerStatefulWidget {
 class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final firstNameController = TextEditingController();
+  final nameController = TextEditingController();
   final lastNameController = TextEditingController();
+
+  bool isValidEmail(String email) {
+    final emailRegex = RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+');
+    return emailRegex.hasMatch(email);
+  }
 
   void createAccount() {
     final email = emailController.text;
     final password = passwordController.text;
-    final firstName = firstNameController.text;
+    final name = nameController.text;
     final lastName = lastNameController.text;
     final authNotifier = ref.read(authProvider.notifier);
-    if (email.isNotEmpty &&
-        password.isNotEmpty &&
-        firstName.isNotEmpty &&
-        lastName.isNotEmpty) {
-      authNotifier.register(firstName, email, password);
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const Onboarding(),
-        ),
-      );
-    } else {
+
+    print("Email input: ${emailController.text}");
+
+    // if (email.isNotEmpty &&
+    //     password.isNotEmpty &&
+    //     name.isNotEmpty &&
+    //     lastName.isNotEmpty) {
+    //   authNotifier.register(name, email, password, lastName);
+    //   // Navigator.of(context).push(
+    //   //   MaterialPageRoute(
+    //   //     builder: (context) => const HomeScreen(),
+    //   //   ),
+    //   // );
+    // } else {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(
+    //       content: Text("Please complete all fields    "),
+    //     ),
+    //   );
+    // }
+
+    if ([email, password, name, lastName].any((field) => field.isEmpty)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please enter both enail and password"),
-        ),
+        const SnackBar(content: Text("Please complete all fields")),
       );
+      return;
     }
+
+    if (!isValidEmail(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter a valid email address")),
+      );
+      return;
+    }
+
+    authNotifier.register(name, email, password, lastName);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    nameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
   }
 
   @override
@@ -70,7 +102,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
               ),
               //first name
               AppTextfield(
-                  controller: firstNameController,
+                  controller: nameController,
                   hintText: "First Name",
                   obsecureText: false),
               const SizedBox(

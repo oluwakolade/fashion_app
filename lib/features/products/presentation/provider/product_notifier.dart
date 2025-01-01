@@ -26,15 +26,6 @@ class ProductNotifier extends StateNotifier<ProductState> {
     }
   }
 
-  //toggle likes
-  Future<void> toggleLikes(String id) async {
-    try {
-      await productRepo.toggleFavorite(id);
-    } catch (e) {
-      state = ProductError("Failed to Like");
-    }
-  }
-
   // Fetch products for a specific feature
   Future<void> loadProductsbyFeature(String feature) async {
     try {

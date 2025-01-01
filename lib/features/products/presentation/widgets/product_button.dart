@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 
 class ProductButton extends StatelessWidget {
   final String text;
+  final String label;
   final void Function()? onPressed;
-  const ProductButton({super.key, required this.onPressed, required this.text});
+  const ProductButton(
+      {super.key,
+      required this.onPressed,
+      required this.text,
+      required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +33,8 @@ class ProductButton extends StatelessWidget {
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
-            const AppText(
-              text: 'Add to Bag',
+            AppText(
+              text: label,
               fontSize: 16,
               color: Colors.white,
             ),
@@ -52,7 +57,7 @@ class ProductButtonCircle extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
           backgroundColor: Theme.of(context).colorScheme.tertiary,
-          padding: const EdgeInsets.all(15),
+          padding: const EdgeInsets.all(12),
           side: BorderSide.none,
           shape: const CircleBorder()),
       child: Center(

@@ -6,9 +6,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final authRepoProvider = Provider<AuthRepo>((ref) => FirebaseAuthRepo());
 
-final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
-  final authRepo = ref.watch(authRepoProvider);
-  return AuthNotifier(authRepo: authRepo);
-});
-
-final selectedLabelProvider = StateProvider<String?>((ref) => null);
+final authProvider = StateNotifierProvider<AuthNotifier, AuthState>(
+  (ref) {
+    final authRepo = ref.watch(authRepoProvider);
+    final authNotifier = AuthNotifier(authRepo: authRepo);
+    authNotifier.checkAuth(); // Check authentication on app launch
+    return authNotifier;
+  },
+);
