@@ -14,9 +14,11 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
 
       await settingsRepo.toggleFavorite(uid, id);
 
-      final favorites = await settingsRepo.getUserFavorites(uid);
+      // final favorites = await settingsRepo.getUserFavorites(uid);
 
-      state = FavoritesLoaded(favorites);
+      final updatedFavorites = await settingsRepo.getUserFavorites(uid);
+
+      state = FavoritesLoaded(updatedFavorites);
     } catch (e) {
       state = FavoritesError(e.toString());
     }

@@ -14,7 +14,6 @@ class ProductNotifier extends StateNotifier<ProductState> {
     try {
       //throw loader while loading products
       state = ProductLoading();
-      //fetch products from data source api/firestore
 
       await Future.delayed(Duration.zero, () async {
         final products = await productRepo.fetchAllProducts();

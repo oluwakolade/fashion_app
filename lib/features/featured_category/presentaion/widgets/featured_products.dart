@@ -59,9 +59,9 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
                               scrollDirection: Axis.horizontal,
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 1,
-                                mainAxisSpacing: 10,
-                              ),
+                                      crossAxisCount: 1,
+                                      mainAxisSpacing: 10,
+                                      childAspectRatio: 1.75),
                               itemBuilder: (context, index) {
                                 final product = productState.products[index];
 

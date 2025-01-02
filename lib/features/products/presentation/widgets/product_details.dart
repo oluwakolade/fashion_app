@@ -9,7 +9,6 @@ import 'package:fashion_app/features/products/presentation/widgets/product_butto
 import 'package:fashion_app/features/products/presentation/widgets/product_dropdown.dart';
 import 'package:fashion_app/features/products/presentation/widgets/select_product_color.dart';
 import 'package:fashion_app/features/products/presentation/widgets/select_products_size.dart';
-import 'package:fashion_app/features/settings/domain/entities/user.dart';
 import 'package:fashion_app/features/settings/presentation/provider/favorite_provider.dart';
 import 'package:fashion_app/features/settings/presentation/provider/favorite_states.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +16,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProductDetails extends ConsumerStatefulWidget {
   final Products products;
-  final User? user;
-  const ProductDetails({super.key, required this.products, this.user});
+  final String userId;
+  const ProductDetails(
+      {super.key, required this.products, required this.userId});
 
   @override
   ConsumerState<ProductDetails> createState() => _ProductDetailsState();
@@ -72,6 +72,12 @@ class _ProductDetailsState extends ConsumerState<ProductDetails> {
   Widget build(BuildContext context) {
     final productState = ref.watch(productProvider);
     final theme = Theme.of(context).colorScheme;
+    final favoritesState = ref.watch(favoritesNotifierProvider);
+    final notifier = ref.read(favoritesNotifierProvider.notifier);
+
+    bool isFavorite = favoritesState is FavoritesLoaded &&
+        favoritesState.favorites
+            .any((product) => product.id == widget.products.id);
 
     return ResponsiveScaffold(
       body: Stack(
@@ -86,35 +92,28 @@ class _ProductDetailsState extends ConsumerState<ProductDetails> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const BackButton(),
-                    Consumer(builder: (context, ref, child) {
-                      final favoritesState =
-                          ref.watch(favoritesNotifierProvider);
-                      final notifier =
-                          ref.read(favoritesNotifierProvider.notifier);
-
-                      bool isFavorite = favoritesState is FavoritesLoaded &&
-                          favoritesState.favorites.any(
-                              (product) => product.id == widget.products.id);
-
-                      return InkWell(
-                        onTap: () async {
+                    InkWell(
+                      onTap: () async {
+                        try {
                           if (favoritesState is! FavoritesLoading) {
                             await notifier.toggleFavorites(
-                                widget.user!.uid, widget.products.id);
+                                widget.userId, widget.products.id);
                           }
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                              color: theme.secondary, shape: BoxShape.circle),
-                          child: Icon(
-                              isFavorite
-                                  ? Icons.favorite
-                                  : Icons.favorite_outline,
-                              color: isFavorite ? Colors.red : Colors.black),
-                        ),
-                      );
-                    }),
+                        } catch (e) {
+                          print('Error toggling favorite: $e');
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            color: theme.secondary, shape: BoxShape.circle),
+                        child: Icon(
+                            isFavorite
+                                ? Icons.favorite
+                                : Icons.favorite_outline,
+                            color: isFavorite ? Colors.red : Colors.black),
+                      ),
+                    )
                   ],
                 ),
                 //images slide show
@@ -126,8 +125,6 @@ class _ProductDetailsState extends ConsumerState<ProductDetails> {
                       itemBuilder: (context, index) {
                         return Image.network(
                           widget.products.images![index],
-                          // height: 120,
-                          // width: 80,
                           fit: BoxFit.cover,
                         );
                       },
@@ -204,17 +201,6 @@ class _ProductDetailsState extends ConsumerState<ProductDetails> {
                   color: theme.secondary,
                   fontSize: 12,
                 ),
-
-                //     SizedBox(
-                //   height: MediaQuery.of(context).size.height * 0.1,
-                //   child: SingleChildScrollView(
-                //     child: AppText(
-                //       text: widget.products.description,
-                //       color: theme.secondary,
-                //       fontSize: 12,
-                //     ),
-                //   ),
-                // ),
 
                 const AppText(
                   text: 'Shipping and Returns',

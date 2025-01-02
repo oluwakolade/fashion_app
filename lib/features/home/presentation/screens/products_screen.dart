@@ -2,6 +2,7 @@ import 'package:fashion_app/core/responsive/responsve_scaffold.dart';
 import 'package:fashion_app/features/category/presentation/widgets/category_view.dart';
 import 'package:fashion_app/features/featured_category/presentaion/widgets/featured_products.dart';
 import 'package:fashion_app/features/home/presentation/widgets/search_bar.dart';
+import 'package:fashion_app/features/products/presentation/widgets/all_products_grid.dart';
 import 'package:flutter/material.dart';
 
 class ProductsScreen extends StatelessWidget {
@@ -30,17 +31,6 @@ class ProductsScreen extends StatelessWidget {
                 ),
 
                 const Expanded(child: AppSearchBar()),
-
-                // //cart
-                // ProductButtonCircle(
-                //     onPressed: () {
-                //       Navigator.of(context).push(
-                //         MaterialPageRoute(
-                //           builder: (context) => const CartScreen(),
-                //         ),
-                //       );
-                //     },
-                //     icon: Icons.shopping_bag_outlined)
               ],
             ),
             const SizedBox(
@@ -51,11 +41,9 @@ class ProductsScreen extends StatelessWidget {
             const CategoryView(),
             //top selling
             const FeaturedProducts(
-              featureName: 'New In',
-            ),
-            const FeaturedProducts(
               featureName: 'Popular',
             ),
+            const AllProductsGrid()
 
             //new in
           ],

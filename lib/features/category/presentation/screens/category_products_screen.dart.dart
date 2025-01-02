@@ -72,7 +72,7 @@ class _CategoryProductsScreenState
                             SizedBox(
                               height: MediaQuery.of(context).size.height * 0.7,
                               child: GridView.builder(
-                                  itemCount: 2,
+                                  itemCount: productState.products.length,
                                   shrinkWrap: true,
                                   gridDelegate:
                                       const SliverGridDelegateWithFixedCrossAxisCount(
@@ -95,70 +95,3 @@ class _CategoryProductsScreenState
                     : const SizedBox());
   }
 }
-
-
-
-//  productState is ProductLoading
-//           ? const Center(child: CircularProgressIndicator())
-//           : productState is ProductLoaded
-//               ? ListView.builder(
-//                   itemCount: productState.products.length,
-//                   itemBuilder: (context, index) {
-//                     final product = productState.products[index];
-//                     return ListTile(
-//                       title: Text(product.name),
-//                       subtitle: Text('\$${product.price}'),
-//                       onTap: () {
-//                         // Navigate to product details screen
-//                       },
-//                     );
-//                   },
-//                 )
-//               : const SizedBox(),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          // products.(
-          //   data: (products) {
-          //     return Expanded(
-          //       child: GridView.builder(
-          //           itemCount: products.length,
-          //           gridDelegate:
-          //               const SliverGridDelegateWithFixedCrossAxisCount(
-          //             childAspectRatio: 0.7,
-          //             crossAxisSpacing: 5,
-          //             mainAxisSpacing: 5,
-          //             crossAxisCount: 2,
-          //           ),
-          //           itemBuilder: (context, index) {
-          //             final product = products[index];
-          //             return ProductCard(
-          //               products: product,
-          //             );
-          //           }),
-          //     );
-          //   },
-          //   error: (error, stack) => const Center(
-          //     child: AppText(
-          //       text: 'Failed to load products. Please try again.',
-          //       fontSize: 16,
-          //     ),
-          //   ),
-          //   loading: () => const Center(
-          //     child: AppLoadingIndicator(),
-          //   ),
-          // )

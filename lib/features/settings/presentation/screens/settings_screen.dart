@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fashion_app/core/constants/app_text.dart';
 import 'package:fashion_app/core/constants/progress_indicator.dart';
 import 'package:fashion_app/core/responsive/responsve_scaffold.dart';

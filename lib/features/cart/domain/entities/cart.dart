@@ -10,9 +10,9 @@ class CartItem {
 
   CartItem(
       {required this.product,
-      required this.size,
-      required this.color,
-      required this.quantity,
+      this.size = 'S',
+      this.color = Colors.black,
+      this.quantity = 1,
       required this.total});
 
   CartItem copyWith({

@@ -1,16 +1,6 @@
 # fashion_app
 
-A new Flutter project.
+Simple fashion shoppig app with flutter , and firebase(auth,database and storage) , riverpod for statemanagement and utlizing clean architeture folder structure.
 
-## Getting Started
+inspired by design from figma community: https://www.figma.com/community/file/1233130764703685276
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

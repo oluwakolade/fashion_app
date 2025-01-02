@@ -4,6 +4,7 @@ import 'package:fashion_app/core/responsive/responsve_scaffold.dart';
 import 'package:fashion_app/features/products/presentation/widgets/product_card.dart';
 import 'package:fashion_app/features/settings/presentation/provider/favorite_provider.dart';
 import 'package:fashion_app/features/settings/presentation/provider/favorite_states.dart';
+import 'package:fashion_app/features/settings/presentation/widgets/empty_favorites.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,7 +23,7 @@ class FavoritesScreen extends ConsumerWidget {
           ),
           title: const Center(
             child: AppText(
-              text: "Address",
+              text: "Favorites",
               fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
@@ -37,24 +38,24 @@ class FavoritesScreen extends ConsumerWidget {
                     child: Text("Failed to load products"),
                   )
                 : favoritesState is FavoritesLoaded
-                    ? Expanded(
-                        child: GridView.builder(
-                            itemCount: 2,
-                            shrinkWrap: true,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              childAspectRatio: 0.7,
-                              crossAxisSpacing: 5,
-                              mainAxisSpacing: 8,
-                              crossAxisCount: 2,
-                            ),
-                            itemBuilder: (context, index) {
-                              final product = favoritesState.favorites[index];
-                              return ProductCard(
-                                products: product,
-                              );
-                            }),
-                      )
-                    : const SizedBox());
+                    ? GridView.builder(
+                        itemCount: favoritesState.favorites.length,
+                        shrinkWrap: true,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          childAspectRatio: 0.7,
+                          crossAxisSpacing: 5,
+                          mainAxisSpacing: 8,
+                          crossAxisCount: 2,
+                        ),
+                        itemBuilder: (context, index) {
+                          final product = favoritesState.favorites[index];
+                          return ProductCard(
+                            products: product,
+                          );
+                        })
+                    : const Center(
+                        child: EmptyFavorites(),
+                      ));
   }
 }

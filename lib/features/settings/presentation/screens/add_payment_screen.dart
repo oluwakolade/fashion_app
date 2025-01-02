@@ -95,13 +95,13 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
                   Expanded(
                     child: AppTextfield(
                         controller: expController,
-                        hintText: "State",
+                        hintText: "Exp",
                         obsecureText: false),
                   ),
                   Expanded(
                     child: AppTextfield(
                         controller: cvvController,
-                        hintText: "Zip Code",
+                        hintText: "CVV",
                         obsecureText: false),
                   ),
                 ],
