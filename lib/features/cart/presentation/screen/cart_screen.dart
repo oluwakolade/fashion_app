@@ -91,7 +91,8 @@ class CartScreen extends ConsumerWidget {
                                   size: cartItem.size,
                                   color: cartItem.color,
                                   colorName: cartItem.color.toString(),
-                                  price: cartItem.product.price,
+                                  price: cartItem.product.price *
+                                      cartItem.quantity,
                                   cartQuantity: cartItem.quantity,
                                   onRemove: () {
                                     ref
