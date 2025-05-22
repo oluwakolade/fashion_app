@@ -9,11 +9,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   AuthNotifier({required this.authRepo}) : super(AuthIntial());
 
-  // bool isValidEmail(String email) {
-  //   final emailRegex =
-  //       RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
-  //   return emailRegex.hasMatch(email);
-  // }
+  bool isValidEmail(String email) {
+    final emailRegex =
+        RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
+    return emailRegex.hasMatch(email);
+  }
 
   //get current user
 
@@ -35,7 +35,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> login(String email, String password) async {
     try {
       state = AuthLoading();
-      final user = await authRepo.loginWithEmailPassword(email, password);
+      final cleanEmail = email.trim();
+      final cleanPassword = password.trim();
+
+      print("Trying to login with email: '$cleanEmail'");
+      final user =
+          await authRepo.loginWithEmailPassword(cleanEmail, cleanPassword);
       if (user != null) {
         _currentUser = user;
         print(_currentUser);
@@ -61,8 +66,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
     // }
     try {
       state = AuthLoading();
+      final cleanEmail = email.trim();
+      final cleanPassword = password.trim();
+
+      print("Trying to login with email: '$cleanEmail'");
       final user = await authRepo.registerWithEmailPassword(
-          name, email, password, lastName);
+          name, lastName, cleanEmail, cleanPassword);
       if (user != null) {
         _currentUser = user;
         print(email);

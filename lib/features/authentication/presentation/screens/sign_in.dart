@@ -49,8 +49,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
 //ref.read(authProvider.notifier)
   void signIn() {
-    final String email = emailController.text;
-    final String password = passwordController.text;
+    final String email = emailController.text.trim();
+    final String password = passwordController.text.trim();
 
     final authNotifier = ref.read(authProvider.notifier);
 

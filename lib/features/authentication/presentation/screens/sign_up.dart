@@ -26,10 +26,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   }
 
   void createAccount() {
-    final email = emailController.text;
-    final password = passwordController.text;
-    final name = nameController.text;
-    final lastName = lastNameController.text;
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+    final name = nameController.text.trim();
+    final lastName = lastNameController.text.trim();
     final authNotifier = ref.read(authProvider.notifier);
 
     print("Email input: ${emailController.text}");
