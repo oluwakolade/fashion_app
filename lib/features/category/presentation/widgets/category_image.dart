@@ -20,9 +20,10 @@ class CategoryImage extends StatelessWidget {
           image,
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) {
-            return const Center(
-              child: Icon(Icons.broken_image, color: Colors.red, size: 30),
-            );
+            // return const Center(
+            //   child: Icon(Icons.broken_image, color: Colors.red, size: 30),
+            // );
+            return Image.asset('assets/p.png');
           },
         ),
       ),

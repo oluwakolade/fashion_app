@@ -88,10 +88,11 @@ class _ProductCardState extends ConsumerState<ProductCard> {
                       width: double.infinity,
                       height: double.infinity,
                       errorBuilder: (context, error, stackTrace) {
-                        return const Center(
-                          child: Icon(Icons.broken_image,
-                              color: Colors.red, size: 50),
-                        );
+                        return Image.asset('assets/p.png');
+                        // return const Center(
+                        //   child: Icon(Icons.broken_image,
+                        //       color: Colors.red, size: 50),
+                        // );
                       },
                     ),
                   ),
